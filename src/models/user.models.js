@@ -42,7 +42,10 @@ const userSchema = new Schema(
             enum:['client', "admin" , "vendor" , "driver"],
 
         },
-        profile: {
+        coverImage :{
+            type:String,
+        },
+        avatar: {
             type: String,
             default:"https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_640.png",
         },
