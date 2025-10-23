@@ -22,10 +22,10 @@ const generateAccessAndRefreshTokens = async(userId)=>{
 }
 
 const registerUser = asyncHandler(async(req,res)=>{
-    const {fullName , userName , email , password } = req.body
+    const {fullName , userName , email , password , address , phone_no , userType} = req.body
 
     if(
-        [fullName , userName , email , password].some(field =>field?.trim() === "")
+        [fullName , userName , email , password , address , phone_no , userType].some(field =>field?.trim() === "")
     ){
         throw new ApiError(400,"All fields are required")
     }
@@ -38,9 +38,10 @@ const registerUser = asyncHandler(async(req,res)=>{
         throw new ApiError(409, " User with given email or username already exist ")
     }
 
+    // console.log("recieved files: " ,req.files)
     let coverImageLocalFilePath;
 
-    if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.Length > 0){
+    if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0){
         coverImageLocalFilePath = req.files.coverImage[0].path;
     }
 

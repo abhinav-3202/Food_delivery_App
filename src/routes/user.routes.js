@@ -1,6 +1,7 @@
 import {Router} from "express";
 import { upload } from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/Auth.middleware.js"
+import { User } from '../models/user.models.js'
 import {
     registerUser,
     loginUser,
@@ -10,15 +11,14 @@ import {
     deleteProfile,
     updateAccountDetails,
     getCurrentUser,
-}
-    from '../controllers/user.controller.js'
+} from "../controllers/user.controller.js"
 
- const router = Router();
+const router = Router();
 
     router.route("/register").post(
         upload.fields([
         {
-            name : coverImage,
+            name : "coverImage",
             maxCount:1,
         }
         ]),registerUser
