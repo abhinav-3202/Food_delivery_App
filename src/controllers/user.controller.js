@@ -155,7 +155,7 @@ const refreshAccessToken = asyncHandler(async(req,res)=>{
         /*jwt.verify() guarantees authenticity and validity of the token itself,
             but not authorization or current legitimacy of the user/session.*/
     
-        const user = User.findById(decodedToken._id)
+        const user = await User.findById(decodedToken._id)
     
         if(!user){
             throw new ApiError(401,"invalid refresh Token")
@@ -262,7 +262,7 @@ const updateAccountDetails = asyncHandler(async(req,res)=>{
         {
             new:true,
         }
-    ).select("-password")
+    ).select("-password -refreshToken")
 
     return res
     .status(200)
