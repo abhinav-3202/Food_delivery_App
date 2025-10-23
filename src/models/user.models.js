@@ -39,7 +39,7 @@ const userSchema = new Schema(
             type:String,
             required : [true,"Password is required"],
             default : "client",
-            enum:['client', "admin" , "vendor" , "driver"],
+            enum:['client', "admin" , "restaurant" , "driver"],
 
         },
         coverImage :{
