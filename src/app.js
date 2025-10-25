@@ -2,6 +2,9 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import userRouter from "./routes/user.routes.js"
+import foodRouter from "./routes/food.routes.js"
+import categoryRouter from "./routes/category.routes.js"
+import restaurantRouter from "./routes/restaurant.js"
 import { ApiResponse } from "./utils/ApiResponse.js";
 
 const app = express();
@@ -15,6 +18,9 @@ app.use(express.urlencoded({extended:true , limit:"16kb"}))
 app.use(express.static("public ")) // storing something temporarily at the server in public folder just now created 
 app.use(cookieParser())
 app.use("/api/v1/users" , userRouter)
+app.use("/api/v1/foods" , foodRouter)
+app.use("/api/v1/category" , categoryRouter)
+app.use("/api/v1/restaurants" , restaurantRouter )
 app.use((err,req,res,next)=>{
     console.error("Error:" ,err);
     const statusCode = err.statusCode||500;
