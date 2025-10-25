@@ -16,3 +16,5 @@ router.route("/create-Category").post(verifyAdmin , createCategory)
 router.route("/get-All-Category").get(verifyJWT , getAllCategory )
 router.route("/update-Category").post(verifyRestaurantOwner , updateCategory )
 router.route("/delete-Category").delete(verifyAdmin , deleteCat )
+
+export default router;

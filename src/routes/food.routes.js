@@ -24,3 +24,5 @@ router.route("/update_food").post(verifyRestaurantOwner , updateFood)
 router.route("/deletefood").delete(verifyRestaurantOwner, deleteFood)
 router.route("/place_order").post(verifyJWT, placeOrder)
 router.route("/order_status").post(verifyRestaurantOwner,orderStatus)
+
+export default router;

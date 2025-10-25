@@ -17,3 +17,4 @@ router.route("/get_all_restaurant").get(verifyJWT, getAllRestaurant)
 router.route("/get_restaurant").get(verifyJWT, getResturantById)
 router.route("/delete_restaurant").delete(verifyRestaurantOwner,deleteResturant)
 
+export default router;
