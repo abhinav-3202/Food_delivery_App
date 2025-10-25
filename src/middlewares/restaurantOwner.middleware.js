@@ -1,7 +1,7 @@
 import { asyncHandler } from "../utils/AsyncHandler.js";
 import { ApiError } from "../utils/Apierror.js";
 
-const verifyRestaurantOwner = asyncHandler(async (req, res, next) => {
+export const verifyRestaurantOwner = asyncHandler(async (req, res, next) => {
     const user = req.user;
 
     if(!user){
