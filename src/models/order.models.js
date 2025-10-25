@@ -9,7 +9,8 @@ const orderSchema = new Schema(
             }
         ],
         payment:{
-
+            type: Number , 
+            required:true,
         },
         buyer:{
             type : Schema.Types.ObjectId,
@@ -26,4 +27,4 @@ const orderSchema = new Schema(
     }
 )
 
-export const order = mongoose.model('order',orderSchema)
+export const Order = mongoose.model('Order',orderSchema)
