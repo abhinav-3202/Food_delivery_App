@@ -12,9 +12,9 @@ import {
 
 const router = Router();
 
-router.route("/add_restaurant").post(verifyRestaurantOwner , addRestaurant)
+router.route("/add_restaurant").post(verifyJWT, verifyRestaurantOwner , addRestaurant)
 router.route("/get_all_restaurant").get(verifyJWT, getAllRestaurant)
-router.route("/get_restaurant").get(verifyJWT, getResturantById)
-router.route("/delete_restaurant").delete(verifyRestaurantOwner,deleteResturant)
+router.route("/get_restaurant/:id").get(verifyJWT, getResturantById)
+router.route("/delete_restaurant/:id").delete(verifyJWT , verifyRestaurantOwner , deleteResturant)
 
 export default router;

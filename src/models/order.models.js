@@ -5,7 +5,7 @@ const orderSchema = new Schema(
         foods:[
             {
                 type:  Schema.Types.ObjectId,
-                ref:"food"
+                ref:"Food"
             }
         ],
         payment:{
@@ -18,8 +18,8 @@ const orderSchema = new Schema(
         },
         status:{
             type:String,
-            enum :[ "preparing " , "on the way" , "delivered"],
-            default : "preparing"
+            enum :[ "ordered" , "onTheWay" , "delivered"],
+            default : "ordered"
         }
     },
     {

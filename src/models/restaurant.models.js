@@ -14,9 +14,14 @@ const restaurantSchema = new Schema(
         foods:{
             type:Array
         },
-        time:{
-            type:String,
+        owner:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"User",
+            required:true,
         },
+        // time:{
+        //     type:String,
+        // },
         pickUp:{
             type:Boolean,
             default:true,
@@ -38,12 +43,12 @@ const restaurantSchema = new Schema(
             min:1,
             max:5,
         },
-        ratingCount:{
-            type:String,
-        },
-        code:{
-            type:String
-        },
+        // ratingCount:{
+        //     type:String,
+        // },
+        // code:{
+        //     type:String
+        // },
         coords:{
             id: { type: String },
             latitude: { type: Number },

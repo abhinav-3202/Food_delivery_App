@@ -3,26 +3,41 @@ import { ApiError } from "../utils/Apierror.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Order } from "../models/order.models.js";
 import { Food } from "../models/food.models.js";
+import { Restaurant } from "../models/restaurant.models.js";
 import mongoose from "mongoose";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
-import mongoose from "mongoose";
+
 
 const addFood = asyncHandler(async(req,res)=>{
     const {
         title,
         description,
         price,
-        foodTags,
+        //foodTags,
         category,
         isAvailable,
-        restaurant,
         rating,
     } = req.body
 
-    if(!title || !description || !price || !restaurant){
+    if(!title || !description || !price ){
         throw new ApiError(400,"All fields are required")
     }
+
+    /*if (!mongoose.Types.ObjectId.isValid(restaurant)) {
+        throw new ApiError(400, "Invalid restaurant ID");
+    }*/
     
+    const restDoc = await Restaurant.findOne({owner : req.user._id}); 
+
+    if(!restDoc){
+        throw new ApiError(404,"No Restaurant found for this user!!! ")
+    }
+
+    // if(req.user._id.toString() !== restDoc.owner._id.toString() ){
+    //     throw new ApiError(403,"Only res owner are allowed to addFood to their restaurant ")
+    // }
+
+
     let imageUrl = ""
     let imageLocalFilePath;
 
@@ -37,16 +52,18 @@ const addFood = asyncHandler(async(req,res)=>{
         description,
         price,
         foodImage :foodImage?.url || "",
-        foodTags,
+        //foodTags,
         category,
         isAvailable,
-        restaurant,
+        restaurant : restDoc._id,
         rating,
     })
 
     if(!newFood ){
         throw new ApiError(500,"Failed to create food item ")
     }
+
+    await Restaurant.findByIdAndUpdate(restDoc._id , { $push:{ foods : newFood._id }})
 
     return res
     .status(200)
@@ -102,7 +119,7 @@ const getFoodByRestaurant = asyncHandler(async(req,res)=>{
 
     const foods = await Food.find({restaurant : restaurantId })
 
-    if(!foods.length === 0 ){
+    if(foods.length === 0 ){
         throw new ApiError(404,"Cannot get food from the desired restaurant")
     }
 
@@ -130,33 +147,22 @@ const updateFood = asyncHandler(async(req,res)=>{
         throw new ApiError(400,"Could not get food")
     }
 
-    const {
-        title,
-        description,
-        price,
-        foodImage,
-        foodTags,
-        category,
-        isAvailable,
-        restaurant,
-        rating,
-    } = req.body
-
     const updates = {};
+
     [
-        title,
-        description,
-        price,
-        foodImage,
-        foodTags,
-        category,
-        isAvailable,
-        restaurant,
-        rating,
-    ].forEach(field=>{
+        "title",
+        "description",
+        "price",
+        "category",
+        "isAvailable",
+        "rating",
+    ].forEach((field)=>{
         if(req.body[field] !== undefined) updates[field] = req.body[field]
     }) 
 
+    if(req.files?.foodImage?.[0]){
+        updates.foodImage = `/temp/${req.files.foodImage[0].filename}`; // /public already from app.use(express.static("public")) so public automatically comes in url
+    }
 
     const updateFoods = await Food.findByIdAndUpdate(
         foodId,
@@ -212,10 +218,10 @@ const placeOrder = asyncHandler(async(req,res)=>{
     const total = foodItems.reduce((sum,item)=>sum + (item.price || 0 ) , 0)
 
     const newOrder = await Order.create({
-        foods : cart,
+        foods : foodIds,
         payment : total,
         buyer : req.user._id,
-        status : "preparing"
+        status : "ordered"
     })
 
     return res
@@ -234,7 +240,7 @@ const orderStatus = asyncHandler(async(req,res)=>{
 
     const {status} = req.body
 
-    const allowedStatuses = ["preparing", "on the way", "delivered"];
+    const allowedStatuses = ["preparing", "onTheWay", "delivered"];
         if (!status || !allowedStatuses.includes(status)) {
             throw new ApiError(400, "Invalid status value");
         }

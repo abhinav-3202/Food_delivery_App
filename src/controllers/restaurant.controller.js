@@ -1,25 +1,21 @@
 import { asyncHandler } from "../utils/AsyncHandler.js";
 import { ApiError } from "../utils/Apierror.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { order } from "../models/order.models.js";
+import { Order } from "../models/order.models.js";
 import { Restaurant } from "../models/restaurant.models.js";
 import mongoose from "mongoose";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
-import mongoose from "mongoose";
+
 
 const addRestaurant = asyncHandler(async(req,res)=>{
     const {
         Res_Name,
         imgUrl,
-        foods,
-        time,
         pickUp,
         delivery,
         isOpen,
         logoUrl,
         rating,
-        ratingCount,
-        code,
         coords,
     } = req.body
 
@@ -30,16 +26,14 @@ const addRestaurant = asyncHandler(async(req,res)=>{
     const newRestaurant = await Restaurant.create({
         Res_Name,
         imgUrl,
-        foods,
-        time,
         pickUp,
         delivery,
         isOpen,
         logoUrl,
         rating,
-        ratingCount,
-        code,
+        owner : req.user._id,
         coords,
+        foods : [],
     })
 
     return res
@@ -98,6 +92,12 @@ const deleteResturant = asyncHandler(async(req,res)=>{
         throw new ApiError(400, "Invalid restaurant ID format");
     }
 
+    const restaurant = await Restaurant.findById(restaurantId)
+
+    if(restaurant.owner.toString() !== req.user._id.toString()){
+        throw new ApiError(403,"You are not Authorized to delete this restaurant")
+    }
+    
     const deletedRestaurnat = await Restaurant.findByIdAndDelete(restaurantId)
 
     if(!deletedRestaurnat){

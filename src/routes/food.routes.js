@@ -13,16 +13,24 @@ import {
     placeOrder,
     orderStatus,
 } from "../controllers/food.controller.js"
+import { upload } from "../middlewares/multer.middleware.js";
 
 const router = Router();
 
-router.route("/add-Food").post(verifyRestaurantOwner , addFood)
+router
+    .route("/add-Food")
+    .post(
+        verifyJWT ,
+        verifyRestaurantOwner ,
+        upload.fields([{name:"foodImage" , maxCount : 1}]),
+        addFood 
+    )
 router.route("/get_all_food").get(verifyJWT , getAllFood)
-router.route("/get_desired_food").get(verifyJWT,getDesiredFood)
-router.route("/get_food_by_restaurant").get(verifyJWT,getFoodByRestaurant)
-router.route("/update_food").post(verifyRestaurantOwner , updateFood)
-router.route("/deletefood").delete(verifyRestaurantOwner, deleteFood)
-router.route("/place_order").post(verifyJWT, placeOrder)
-router.route("/order_status").post(verifyRestaurantOwner,orderStatus)
+router.route("/get_desired_food/:id").get(verifyJWT,getDesiredFood)
+router.route("/get_food_by_restaurant/:id").get(verifyJWT,getFoodByRestaurant)
+router.route("/update_food/:id").patch(verifyJWT , verifyRestaurantOwner ,upload.fields([{name:"foodImage" , maxCount : 1}]), updateFood)
+router.route("/deletefood/:id").delete(verifyJWT ,verifyRestaurantOwner, deleteFood)
+router.route("/place_order").post(verifyJWT, placeOrder) 
+router.route("/order_status/:id").patch(verifyJWT ,verifyRestaurantOwner,orderStatus)
 
 export default router;

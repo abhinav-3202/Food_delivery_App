@@ -4,7 +4,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { Category } from "../models/category.models.js";
 import mongoose from "mongoose";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
-import mongoose from "mongoose";
+
 
 const createCategory = asyncHandler(async(req,res)=>{
     const {title , imageUrl } = req.body
