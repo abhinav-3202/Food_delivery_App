@@ -12,9 +12,9 @@ import {
 
 const router = Router();
 
-router.route("/create-Category").post(verifyAdmin , createCategory)
+router.route("/create-Category").post(verifyJWT ,verifyAdmin , createCategory)
 router.route("/get-All-Category").get(verifyJWT , getAllCategory )
-router.route("/update-Category").post(verifyRestaurantOwner , updateCategory )
-router.route("/delete-Category").delete(verifyAdmin , deleteCat )
+router.route("/update-Category/:id").patch(verifyJWT ,verifyAdmin , updateCategory )
+router.route("/delete-Category/:id").delete(verifyJWT ,verifyAdmin , deleteCat )
 
 export default router;

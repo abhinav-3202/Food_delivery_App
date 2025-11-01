@@ -44,19 +44,22 @@ const getAllCategory = asyncHandler(async(req,res)=>{
 })
 
 const updateCategory = asyncHandler(async(req,res)=>{
-    const catId = req.params
+    const catId = req.params.id
     const { title , imageUrl } = req.body
+
+    // console.log("catId is:",catId)
     
-    if(!catId || mongoose.Types.ObjectId.isValid(catId)){
+    if(!catId || !mongoose.Types.ObjectId.isValid(catId)){
         throw new ApiError(400 , "catId is required ")
     }
 
-    const updates = {}
+    const updates = {};
+
     [
-        title,
-        imageUrl
-    ].forEach(field=>{
-        if(req.body[field]) updates[field] = req.body[field]
+        "title",
+        "imageUrl"
+    ].forEach((field)=>{
+        if(req.body[field] !== undefined ) updates[field] = req.body[field]
     })
 
     const updateCat = await Category.findByIdAndUpdate(
